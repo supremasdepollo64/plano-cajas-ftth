@@ -1,0 +1,683 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Cajas - etiquetas Google Maps y adicionales</name>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.0009279,-34.9626225,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.0017014,-34.9629204,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.1893281,-34.7921912,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.1882018,-34.793087,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.002059,-34.962725,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.1876435,-34.7939343,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.001193,-34.961828,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.0013186,-34.9623362,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.1887399,-34.7979287,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.00112,-34.96247,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja</name>
+      <Point>
+        <coordinates>-58.000464,-34.961127,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Principal 1</name>
+      <Point>
+        <coordinates>-58.2075168,-34.8217622,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Principal Sr3</name>
+      <Point>
+        <coordinates>-58.2128548,-34.8174815,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2106401,-34.8204682,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2117634,-34.8200165,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2123383,-34.821502,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.211628,-34.818611,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2117623,-34.8207297,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2122505,-34.8205574,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.211697,-34.819086,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.211243,-34.8210995,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.2111649,-34.8200096,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr2</name>
+      <Point>
+        <coordinates>-58.211867,-34.821711,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.211686,-34.8186164,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.216821,-34.817944,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.2103377,-34.8148887,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.2135472,-34.8179796,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.2100248,-34.8179394,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.2168769,-34.8180138,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Caja Sr3</name>
+      <Point>
+        <coordinates>-58.2132848,-34.8178304,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1887123,-34.7923235,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.18857,-34.7980289,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1866501,-34.7942827,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.18668,-34.7951042,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1871939,-34.7935823,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1878927,-34.7953478,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1915686,-34.7940082,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1575856,-34.7835859,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja</name>
+      <Point>
+        <coordinates>-58.1891645,-34.7926875,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja foco</name>
+      <Point>
+        <coordinates>-58.188354,-34.796443,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja foco</name>
+      <Point>
+        <coordinates>-58.188325,-34.796442,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja pl5</name>
+      <Point>
+        <coordinates>-58.1693832,-34.7805502,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja principal</name>
+      <Point>
+        <coordinates>-58.1569263,-34.7822887,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>caja sr</name>
+      <Point>
+        <coordinates>-58.207861,-34.824306,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 1</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17314311891021,-34.7792097573741,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 7</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.172858804754654,-34.779045210847265,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl4 caja 7</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17290708451692,-34.78042153917341,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl4 caja 8</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17365005641405,-34.78018361302006,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 2</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.172853440336624,-34.77875053403742,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 3</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.173346966795364,-34.77949208154767,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 4</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17347571282808,-34.779752040044656,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 5</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.173094839147964,-34.77962426393663,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 6</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.172740787558,-34.77898538042807,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 8</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.172338456205765,-34.77851392528718,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 9</name>
+      <description>Grupo: Platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-76.65902153125,-9.724369133223936,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl3 caja 10</name>
+      <description>Grupo: platanos; Código: 12345678; Nota: p</description>
+      <Point>
+        <coordinates>-58.17277297406618,-34.77912189125769,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 1</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 2</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-76.65902153125,-9.724369133223936,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 3</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 4</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 5</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 6</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 7</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl2 caja 8</name>
+      <description>Grupo: platanos; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.17382440000001,-34.7835455,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 1</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24243799319457,-34.81914354241879,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 2</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24327569394838,-34.8220663946922,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 3</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24465971380006,-34.8231144943753,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 4</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24536781697999,-34.82380147684779,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 5</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.244809917504895,-34.82147628227973,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr5 caja 6</name>
+      <description>Grupo: rr5; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.244058898980725,-34.819829229747675,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 1</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24622075944673,-34.81821297238864,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 2</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24672747354319,-34.8185045015488,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 3</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24611883550416,-34.818587312746,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 4</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.246794752175916,-34.81774174152094,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 5</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.246537260110486,-34.81753915545962,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 6</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24601154714357,-34.81719087797691,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 7</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24588280111085,-34.8180059834611,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 8</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24543218999635,-34.81822178041684,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 9</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.246704410138626,-34.81899834692269,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 10</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24695568471681,-34.81912459828571,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 11</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24715953260194,-34.819115790354296,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 12</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24740756775758,-34.81903488652247,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 13</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.247309736306775,-34.81878108826269,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 14</name>
+      <description>Grupo: rr4; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.247170261438,-34.81943727924083,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 15</name>
+      <description>Grupo: d; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24794273763429,-34.8199349239471,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>rr4 caja 16</name>
+      <description>Grupo: rr4f; Código: 12345678</description>
+      <Point>
+        <coordinates>-58.24601154714357,-34.817266103892926,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 1</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1753479,-34.7774324,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 2</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1758479,-34.7767324,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 3</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1764479,-34.7773324,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 4</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1774479,-34.7774824,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 5</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1751479,-34.7767324,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 6</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1740479,-34.7778824,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 7</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1733479,-34.7772324,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 caja 8</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1708479,-34.7779824,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>pl1 Pr</name>
+      <description>Grupo: platanos; Ubicación aproximada tomada de captura; referencia C. 157 5691</description>
+      <Point>
+        <coordinates>-58.1756479,-34.7779824,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 1</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2117,-34.8198,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 2</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2124,-34.8202,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 3</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2136,-34.82,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 4</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2146,-34.8206,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 5</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2117,-34.8185,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 6</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2119,-34.8191,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 7</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2119,-34.8209,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>sr1 caja 8</name>
+      <description>Grupo: Bosques; SR1; ubicación aproximada tomada del plano</description>
+      <Point>
+        <coordinates>-58.2112,-34.822,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
