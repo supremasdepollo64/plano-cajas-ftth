@@ -52,6 +52,15 @@ jobs:
           cp docs/app.js android/app/src/main/assets/app.js
           cp docs/styles.css android/app/src/main/assets/styles.css
           cp docs/data/cajas.kml android/app/src/main/assets/data/cajas.kml
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          kml = Path("docs/data/cajas.kml").read_text(encoding="utf-8")
+          Path("android/app/src/main/assets/data/cajas.js").write_text(
+              "window.EMBEDDED_KML = " + json.dumps(kml, ensure_ascii=False) + ";\n",
+              encoding="utf-8"
+          )
+          PY
           curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js -o android/app/src/main/assets/vendor/leaflet/leaflet.js
           curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css -o android/app/src/main/assets/vendor/leaflet/leaflet.css
           curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png -o android/app/src/main/assets/vendor/leaflet/images/marker-icon.png
