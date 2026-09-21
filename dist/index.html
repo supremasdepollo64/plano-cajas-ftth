@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071b2a">
-  <meta name="description" content="Mapa operativo de cajas NAP y CTO de la red FTTH.">
+  <meta name="description" content="App operativa para localizar cajas NAP y CTO de la red FTTH.">
   <title>Plano FTTH · Cajas NAP</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071b2a'/%3E%3Cpath d='M12 42h15l9-20h16' fill='none' stroke='%2325e0a1' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='42' r='6' fill='%23f7b84b'/%3E%3Ccircle cx='52' cy='22' r='6' fill='%23f7b84b'/%3E%3C/svg%3E">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css">
@@ -18,6 +19,16 @@
         <div class="brand-mark" aria-hidden="true"><span></span><i></i></div>
         <div><p>Red de fibra</p><h1>Plano FTTH</h1></div>
       </header>
+
+      <section class="nearest-panel" aria-label="Buscar caja más cercana">
+        <label for="locationInput">Ubicación del cliente</label>
+        <div class="location-control">
+          <input id="locationInput" type="text" placeholder="Pegá enlace, dirección o coordenadas" autocomplete="off">
+          <button id="findNearest" type="button">Buscar</button>
+        </div>
+        <button id="nearestFromGps" class="secondary-action" type="button">Usar mi ubicación</button>
+        <p id="nearestResult" class="nearest-result" aria-live="polite"></p>
+      </section>
 
       <section class="summary" aria-label="Resumen">
         <div><strong id="totalCount">—</strong><span>cajas cargadas</span></div>
