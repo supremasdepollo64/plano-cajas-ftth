@@ -291,10 +291,15 @@ function requestGps(findNearest) {
 
 async function loadBoxes() {
   try {
-    const response = await fetch('data/cajas.kml', { cache: 'no-store' });
-    if (!response.ok) throw new Error('No se pudo abrir el archivo de cajas.');
+    let kmlText = window.EMBEDDED_KML || null;
 
-    state.boxes = parseKml(await response.text());
+    if (!kmlText) {
+      const response = await fetch('data/cajas.kml', { cache: 'no-store' });
+      if (!response.ok) throw new Error('No se pudo abrir el archivo de cajas.');
+      kmlText = await response.text();
+    }
+
+    state.boxes = parseKml(kmlText);
     totalCount.textContent = state.boxes.length;
 
     buildMarkers();
