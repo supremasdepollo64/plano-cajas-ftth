@@ -5,7 +5,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-const state = { boxes: [], filter: 'all', query: '', markers: new Map(), selected: null };
+const state = { boxes: [], filter: 'all', query: '', markers: new Map(), selected: null, targetMarker: null, locatingNearest: false };
 const list = document.querySelector('#boxList');
 const loading = document.querySelector('#loading');
 const empty = document.querySelector('#emptyState');
@@ -13,9 +13,11 @@ const totalCount = document.querySelector('#totalCount');
 const visibleCount = document.querySelector('#visibleCount');
 const popupTemplate = document.querySelector('#popupTemplate');
 const layer = L.featureGroup().addTo(map);
+const locationInput = document.querySelector('#locationInput');
+const nearestResult = document.querySelector('#nearestResult');
 
 function escapeText(value = '') {
-  return value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 }
 
 function markerIcon(box, selected = false) {
@@ -36,15 +38,14 @@ function popupFor(box) {
   description.textContent = box.description || 'Caja de acceso de la red FTTH';
   description.hidden = !box.description;
   node.querySelector('.popup-coords').textContent = `${box.lat.toFixed(6)}, ${box.lng.toFixed(6)}`;
-  const directions = node.querySelector('.directions');
-  directions.href = `https://www.google.com/maps/dir/?api=1&destination=${box.lat},${box.lng}`;
+  node.querySelector('.directions').href = `https://www.google.com/maps/dir/?api=1&destination=${box.lat},${box.lng}`;
   return node;
 }
 
 function selectBox(id, move = true) {
   if (state.selected && state.markers.has(state.selected)) {
     const previous = state.boxes.find(box => box.id === state.selected);
-    state.markers.get(state.selected).setIcon(markerIcon(previous));
+    if (previous) state.markers.get(state.selected).setIcon(markerIcon(previous));
   }
   const box = state.boxes.find(item => item.id === id);
   const marker = state.markers.get(id);
@@ -87,10 +88,110 @@ function parseKml(text) {
   return [...xml.getElementsByTagNameNS('*', 'Placemark')].map((placemark, index) => {
     const name = placemark.getElementsByTagNameNS('*', 'name')[0]?.textContent?.trim() || `Caja ${index + 1}`;
     const description = placemark.getElementsByTagNameNS('*', 'description')[0]?.textContent?.trim() || '';
-    const coordinates = placemark.getElementsByTagNameNS('*', 'coordinates')[0]?.textContent?.trim().split(',').map(Number);
+    const raw = placemark.getElementsByTagNameNS('*', 'coordinates')[0]?.textContent?.trim();
+    const coordinates = raw?.split(',').map(Number);
     if (!coordinates || coordinates.length < 2 || coordinates.some(Number.isNaN)) return null;
     return { id: `box-${index + 1}`, name, description, lng: coordinates[0], lat: coordinates[1], approx: /aproximad/i.test(`${name} ${description}`) };
   }).filter(Boolean);
+}
+
+function distanceMeters(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const toRad = value => value * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function nearestBox(lat, lng) {
+  let best = null;
+  for (const box of state.boxes) {
+    const distance = distanceMeters(lat, lng, box.lat, box.lng);
+    if (!best || distance < best.distance) best = { box, distance };
+  }
+  return best;
+}
+
+function formatDistance(meters) {
+  return meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(2)} km`;
+}
+
+function showTarget(lat, lng, label) {
+  if (state.targetMarker) map.removeLayer(state.targetMarker);
+  state.targetMarker = L.circleMarker([lat, lng], {
+    radius: 8, weight: 3, color: '#fff', fillColor: '#1475ff', fillOpacity: 1
+  }).addTo(map).bindPopup(label || 'Ubicación del cliente');
+}
+
+function locateNearest(lat, lng, label = 'Ubicación del cliente') {
+  if (!state.boxes.length) {
+    nearestResult.textContent = 'Todavía se están cargando las cajas.';
+    return;
+  }
+  const result = nearestBox(lat, lng);
+  if (!result) return;
+  showTarget(lat, lng, label);
+  selectBox(result.box.id, false);
+  map.fitBounds(L.latLngBounds([[lat, lng], [result.box.lat, result.box.lng]]).pad(.35), { maxZoom: 17 });
+  nearestResult.innerHTML = `Más cercana: <strong>${escapeText(result.box.name)}</strong> · ${formatDistance(result.distance)}`;
+}
+
+function parseCoordinates(value) {
+  if (!value) return null;
+  let text = value.trim();
+  try { text = decodeURIComponent(text); } catch (_) {}
+  const patterns = [
+    /@(-?\d{1,2}(?:\.\d+)?),(-?\d{1,3}(?:\.\d+)?)/,
+    /!3d(-?\d{1,2}(?:\.\d+)?).*?!4d(-?\d{1,3}(?:\.\d+)?)/,
+    /(?:query|q|ll)=(-?\d{1,2}(?:\.\d+)?)[, ]+(-?\d{1,3}(?:\.\d+)?)/i,
+    /(-?\d{1,2}(?:\.\d+)?)\s*[,; ]\s*(-?\d{1,3}(?:\.\d+)?)/
+  ];
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (!match) continue;
+    const lat = Number(match[1]);
+    const lng = Number(match[2]);
+    if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { lat, lng };
+  }
+  return null;
+}
+
+function textWithoutUrls(value) {
+  return value.replace(/https?:\/\/\S+/gi, ' ').replace(/\s+/g, ' ').trim();
+}
+
+async function geocodeAddress(value) {
+  const query = textWithoutUrls(value);
+  if (query.length < 4) return null;
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ar&q=${encodeURIComponent(query)}`;
+  const response = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+  if (!response.ok) return null;
+  const data = await response.json();
+  if (!data.length) return null;
+  return { lat: Number(data[0].lat), lng: Number(data[0].lon), label: data[0].display_name };
+}
+
+async function handleLocation(value) {
+  const clean = value.trim();
+  if (!clean) {
+    nearestResult.textContent = 'Pegá una ubicación o usá tu GPS.';
+    return;
+  }
+  nearestResult.textContent = 'Buscando ubicación…';
+  const coords = parseCoordinates(clean);
+  if (coords) {
+    locateNearest(coords.lat, coords.lng);
+    return;
+  }
+  try {
+    const geocoded = await geocodeAddress(clean);
+    if (geocoded) {
+      locateNearest(geocoded.lat, geocoded.lng, geocoded.label);
+      return;
+    }
+  } catch (_) {}
+  nearestResult.textContent = 'No pude obtener la ubicación. Si es un enlace corto de Maps, compartilo directamente con esta app o pegá también la dirección.';
 }
 
 async function loadBoxes() {
@@ -107,6 +208,13 @@ async function loadBoxes() {
     totalCount.textContent = state.boxes.length;
     render();
     if (state.boxes.length) map.fitBounds(layer.getBounds().pad(.08));
+
+    const params = new URLSearchParams(location.search);
+    const shared = [params.get('title'), params.get('text'), params.get('url')].filter(Boolean).join(' ');
+    if (shared) {
+      locationInput.value = shared;
+      handleLocation(shared);
+    }
   } catch (error) {
     empty.hidden = false;
     empty.textContent = error.message;
@@ -128,11 +236,32 @@ list.addEventListener('click', event => {
 });
 document.querySelector('#fitAll').addEventListener('click', () => {
   const matches = matchingBoxes();
-  if (!matches.length) return;
-  map.fitBounds(L.latLngBounds(matches.map(box => [box.lat, box.lng])).pad(.08));
+  if (matches.length) map.fitBounds(L.latLngBounds(matches.map(box => [box.lat, box.lng])).pad(.08));
 });
-document.querySelector('#locate').addEventListener('click', () => map.locate({ setView: true, maxZoom: 17 }));
-map.on('locationfound', event => L.circleMarker(event.latlng, { radius: 8, weight: 3, color: '#fff', fillColor: '#1475ff', fillOpacity: 1 }).addTo(map).bindPopup('Tu ubicación').openPopup());
-map.on('locationerror', () => alert('No fue posible obtener tu ubicación. Revisá los permisos del navegador.'));
+document.querySelector('#findNearest').addEventListener('click', () => handleLocation(locationInput.value));
+locationInput.addEventListener('keydown', event => { if (event.key === 'Enter') handleLocation(locationInput.value); });
+
+document.querySelector('#nearestFromGps').addEventListener('click', () => {
+  state.locatingNearest = true;
+  nearestResult.textContent = 'Buscando tu ubicación…';
+  map.locate({ setView: false, maxZoom: 17 });
+});
+document.querySelector('#locate').addEventListener('click', () => {
+  state.locatingNearest = false;
+  map.locate({ setView: true, maxZoom: 17 });
+});
+map.on('locationfound', event => {
+  showTarget(event.latlng.lat, event.latlng.lng, 'Tu ubicación');
+  if (state.locatingNearest) locateNearest(event.latlng.lat, event.latlng.lng, 'Tu ubicación');
+  state.locatingNearest = false;
+});
+map.on('locationerror', () => {
+  state.locatingNearest = false;
+  nearestResult.textContent = 'No fue posible obtener tu ubicación. Revisá los permisos del navegador.';
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
 
 loadBoxes();
