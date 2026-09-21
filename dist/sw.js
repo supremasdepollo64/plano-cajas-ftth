@@ -1,4 +1,4 @@
-const CACHE = 'plano-ftth-v3';
+const CACHE = 'cto-finder-v4';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'data/cajas.kml', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', event => {
