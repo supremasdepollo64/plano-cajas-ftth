@@ -1,7 +1,7 @@
 {
-  "name": "Plano FTTH · Cajas NAP",
-  "short_name": "Plano FTTH",
-  "description": "Localiza la caja FTTH más cercana a una ubicación.",
+  "name": "CTO Finder",
+  "short_name": "CTO Finder",
+  "description": "Localiza la caja CTO/FTTH más cercana a una ubicación.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
