@@ -1,0 +1,74 @@
+name: Build CTO Finder APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "docs/app.js"
+      - "docs/styles.css"
+      - "docs/data/cajas.kml"
+      - ".github/workflows/build-android.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Prepare bundled web app
+        run: |
+          mkdir -p android/app/src/main/assets/data
+          mkdir -p android/app/src/main/assets/vendor/leaflet/images
+          cp docs/app.js android/app/src/main/assets/app.js
+          cp docs/styles.css android/app/src/main/assets/styles.css
+          cp docs/data/cajas.kml android/app/src/main/assets/data/cajas.kml
+          curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js -o android/app/src/main/assets/vendor/leaflet/leaflet.js
+          curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css -o android/app/src/main/assets/vendor/leaflet/leaflet.css
+          curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png -o android/app/src/main/assets/vendor/leaflet/images/marker-icon.png
+          curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-2x.png -o android/app/src/main/assets/vendor/leaflet/images/marker-icon-2x.png
+          curl -fL https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png -o android/app/src/main/assets/vendor/leaflet/images/marker-shadow.png
+          cat >> android/app/src/main/assets/app.js <<'EOF'
+
+          window.handleAndroidSharedText = function(text) {
+            if (!text) return;
+            locationInput.value = text;
+            handleLocation(text);
+          };
+          EOF
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Build APK
+        working-directory: android
+        run: gradle assembleDebug --stacktrace
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk CTO-Finder.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CTO-Finder-APK
+          path: CTO-Finder.apk
+          retention-days: 30
