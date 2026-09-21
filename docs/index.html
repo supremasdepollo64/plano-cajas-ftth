@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071b2a">
+  <meta name="description" content="App operativa para localizar cajas NAP y CTO de la red FTTH.">
+  <title>Plano FTTH · Cajas NAP</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar" aria-label="Panel de cajas">
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span><i></i></div>
+        <div><p>Red de fibra</p><h1>Plano FTTH</h1></div>
+      </header>
+
+      <section class="nearest-panel" aria-label="Buscar caja más cercana">
+        <label for="locationInput">Ubicación del cliente</label>
+        <div class="location-control">
+          <input id="locationInput" type="text" placeholder="Pegá enlace, dirección o coordenadas" autocomplete="off">
+          <button id="findNearest" type="button">Buscar</button>
+        </div>
+        <button id="nearestFromGps" class="secondary-action" type="button">Usar mi ubicación</button>
+        <p id="nearestResult" class="nearest-result" aria-live="polite"></p>
+      </section>
+
+      <section class="summary" aria-label="Resumen">
+        <div><strong id="totalCount">—</strong><span>cajas cargadas</span></div>
+        <div><strong id="visibleCount">—</strong><span>en pantalla</span></div>
+      </section>
+
+      <div class="search-wrap">
+        <label for="search">Buscar caja</label>
+        <div class="search-control">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+          <input id="search" type="search" placeholder="Nombre, grupo o zona" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filtrar ubicaciones">
+        <button class="filter active" data-filter="all">Todas</button>
+        <button class="filter" data-filter="exact">Verificadas</button>
+        <button class="filter" data-filter="approx">Aproximadas</button>
+      </div>
+
+      <div class="list-heading"><span>Ubicaciones</span><button id="fitAll" type="button">Ver todas</button></div>
+      <ol id="boxList" class="box-list" aria-live="polite"></ol>
+      <p id="emptyState" class="empty" hidden>No hay cajas que coincidan con la búsqueda.</p>
+    </aside>
+
+    <section class="map-stage" aria-label="Mapa de la red FTTH">
+      <div id="map"></div>
+      <div class="map-toolbar">
+        <button id="locate" type="button" title="Mostrar mi ubicación" aria-label="Mostrar mi ubicación">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path><circle cx="12" cy="12" r="8"></circle></svg>
+        </button>
+      </div>
+      <div class="legend" aria-label="Referencias"><span><i class="dot exact"></i>Verificada</span><span><i class="dot approx"></i>Aproximada</span></div>
+      <div id="loading" class="loading"><span></span>Cargando cajas…</div>
+    </section>
+  </main>
+
+  <template id="popupTemplate">
+    <article class="popup-card">
+      <p class="popup-kicker"></p>
+      <h2></h2>
+      <p class="popup-description"></p>
+      <div class="popup-coords"></div>
+      <a class="directions" target="_blank" rel="noreferrer">Cómo llegar</a>
+    </article>
+  </template>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
