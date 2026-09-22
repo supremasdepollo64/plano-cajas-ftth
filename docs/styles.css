@@ -22,3 +22,33 @@
 .nearest-select span{margin-top:4px;color:#9fb3bb;font-size:.78rem}
 .nearest-route{display:inline-block;padding:9px 11px;border-radius:10px;background:#25e0a1;color:#06261d!important;font-size:.78rem;font-weight:900;text-decoration:none}
 @media(max-width:780px){.nearest-modal{align-items:end;padding:0}.nearest-modal-card{width:100%;max-height:74vh;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}}
+
+/* CTO Finder 1.2 */
+.nearest-modal{pointer-events:none;place-items:end center;padding:0!important}
+.nearest-modal-backdrop{display:none!important;backdrop-filter:none!important}
+.nearest-modal-card{pointer-events:auto;width:min(96vw,520px);max-height:46vh;margin:0 0 10px;border-radius:18px!important}
+.nearest-option{transition:border-color .15s,transform .15s,background .15s}
+.nearest-option.active{border-color:#25e0a1;background:#103548;transform:translateY(-1px)}
+.nearest-option.active .nearest-rank{background:#25e0a1;color:#06261d}
+.menu-toggle{position:fixed;z-index:4900;top:14px;left:14px;width:44px;height:44px;border:1px solid #31505e;border-radius:12px;background:#071b2af2;color:#fff;font-size:1.25rem;font-weight:900;box-shadow:0 8px 24px #00101855;cursor:pointer}
+.menu-shade{position:fixed;z-index:4890;inset:0;background:#00101870}
+.app-menu{position:fixed;z-index:4950;top:0;left:0;width:min(86vw,330px);height:100dvh;padding:18px;background:#071b2a;border-right:1px solid #31505e;box-shadow:18px 0 50px #00101880}
+.app-menu-header{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px;border-bottom:1px solid #1c3b4a}
+.app-menu-header small,.app-menu-header strong{display:block}.app-menu-header small{color:#25e0a1;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.app-menu-header strong{font-size:1.25rem}
+.app-menu-header button{width:38px;height:38px;border:1px solid #31505e;border-radius:10px;background:#0b2535;color:#fff;font-size:1.35rem}
+.app-menu-item{display:block;width:100%;padding:14px 10px;border:0;border-bottom:1px solid #173442;background:transparent;color:#fff;text-align:left;cursor:pointer}
+.app-menu-item span,.app-menu-item small{display:block}.app-menu-item span{font-weight:850;font-size:.95rem}.app-menu-item small{margin-top:4px;color:#8da3ad;font-size:.76rem}
+.simple-modal{position:fixed;z-index:5200;inset:0;display:grid;place-items:center;padding:18px}
+.simple-modal-shade{position:absolute;inset:0;background:#001018b8}
+.simple-modal-card{position:relative;width:min(92vw,420px);padding:20px;border:1px solid #31505e;border-radius:18px;background:#071b2a;color:#e9f2f4;box-shadow:0 24px 80px #0009}
+.simple-modal-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border:1px solid #31505e;border-radius:10px;background:#0b2535;color:#fff;font-size:1.3rem}
+.modal-kicker{margin:0;color:#25e0a1;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.simple-modal-card h2{margin:4px 42px 10px 0}.modal-copy,.modal-note,.about-version,.about-credit{color:#a9bdc5;line-height:1.45}.modal-note{font-size:.78rem}
+.role-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.role-choice{padding:11px;border:1px solid #31505e;border-radius:10px;background:#0b2535;color:#dce8eb;font-weight:800}
+.role-choice.active{border-color:#25e0a1;background:#25e0a119;color:#67edbe}
+.modal-field{display:block;margin:10px 0;color:#b9c8ce;font-size:.78rem;font-weight:700}.modal-field input{display:block;width:100%;height:42px;margin-top:6px;padding:0 11px;border:1px solid #31505e;border-radius:10px;background:#0a2130;color:#fff}
+.modal-primary{width:100%;margin-top:6px;padding:11px;border:0;border-radius:10px;background:#25e0a1;color:#06261d;font-weight:900}.modal-primary:disabled{opacity:.45}
+.about-version{font-weight:800;color:#fff}.about-credit strong{color:#fff}
+.app-toast{position:fixed;z-index:5600;left:50%;bottom:22px;transform:translateX(-50%);max-width:min(90vw,460px);padding:12px 16px;border:1px solid #31505e;border-radius:12px;background:#071b2af5;color:#fff;box-shadow:0 12px 35px #0008;font-size:.84rem}
+@media(max-width:780px){.nearest-modal-card{width:100%;max-height:46vh;margin:0;border-radius:18px 18px 0 0!important}.menu-toggle{top:12px;left:12px}.leaflet-top.leaflet-left{top:54px}}
