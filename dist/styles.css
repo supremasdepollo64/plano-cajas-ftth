@@ -77,3 +77,6 @@
 /* CTO Finder 1.6 */
 .reset-action{background:#0a2635;border-color:#244858;color:#a9bdc5}
 .reset-action:active{transform:translateY(1px)}
+
+/* CTO Finder 1.7 */
+.nearest-option.active{box-shadow:inset 0 0 0 1px #25e0a155}

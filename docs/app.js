@@ -2,7 +2,7 @@ let map = null;
 let layer = null;
 let mapReady = false;
 
-const state = { boxes: [], filter: 'all', query: '', markers: new Map(), selected: null, targetMarker: null, routeLayer: null, customerLocation: null, nearestItems: [], sourceName: 'Cajas incluidas' };
+const state = { boxes: [], filter: 'all', query: '', markers: new Map(), selected: null, targetMarker: null, routeLayer: null, routeController: null, routeRequestId: 0, customerLocation: null, nearestItems: [], sourceName: 'Cajas incluidas' };
 const list = document.querySelector('#boxList');
 const loading = document.querySelector('#loading');
 const empty = document.querySelector('#emptyState');
@@ -378,26 +378,48 @@ function renderNearestOptions(lat, lng, items, usingRoadDistance) {
 async function drawRoadRoute(lat, lng, box) {
   if (!mapReady) return;
 
+  const requestId = ++state.routeRequestId;
+
+  if (state.routeController) {
+    state.routeController.abort();
+    state.routeController = null;
+  }
+
   if (state.routeLayer) {
     map.removeLayer(state.routeLayer);
     state.routeLayer = null;
   }
 
+  const controller = new AbortController();
+  state.routeController = controller;
+
   try {
     const url = `https://router.project-osrm.org/route/v1/driving/${lng},${lat};${box.lng},${box.lat}?overview=full&geometries=geojson`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) throw new Error('Sin ruta');
+
     const data = await response.json();
+    if (requestId !== state.routeRequestId) return;
+
     const geometry = data?.routes?.[0]?.geometry;
     if (!geometry) throw new Error('Sin geometría');
 
+    if (state.routeLayer) {
+      map.removeLayer(state.routeLayer);
+      state.routeLayer = null;
+    }
+
     state.routeLayer = L.geoJSON(geometry, { style: { weight: 5, opacity: .9 } }).addTo(map);
     map.fitBounds(state.routeLayer.getBounds().pad(.18), { maxZoom: 17 });
-  } catch (_) {
+  } catch (error) {
+    if (error?.name === 'AbortError' || requestId !== state.routeRequestId) return;
     map.fitBounds(L.latLngBounds([[lat, lng], [box.lat, box.lng]]).pad(.35), { maxZoom: 17 });
+  } finally {
+    if (requestId === state.routeRequestId) {
+      state.routeController = null;
+    }
   }
 }
-
 async function selectNearestCandidate(id) {
   const item = state.nearestItems.find(entry => entry.box.id === id);
   if (!item) return;
@@ -408,11 +430,14 @@ async function selectNearestCandidate(id) {
 
   selectBox(id, false);
 
+  const meters = Number.isFinite(item.roadDistance) ? item.roadDistance : item.directDistance;
+  const suffix = Number.isFinite(item.roadDistance) ? 'por calles' : 'aprox.';
+  nearestResult.innerHTML = `Seleccionada: <strong>${escapeText(item.box.name)}</strong> · ${formatDistance(meters)} ${suffix}`;
+
   if (state.customerLocation) {
     await drawRoadRoute(state.customerLocation.lat, state.customerLocation.lng, item.box);
   }
 }
-
 async function locateNearest(lat, lng, label = 'Ubicación del cliente') {
   if (!state.boxes.length) {
     nearestResult.textContent = 'Las cajas todavía no están disponibles.';
@@ -656,6 +681,12 @@ function resetLocationSearch() {
   nearestResult.textContent = '';
   nearestOptions.innerHTML = '';
   nearestModalStatus.textContent = 'Calculando distancias por calles…';
+
+  if (state.routeController) {
+    state.routeController.abort();
+    state.routeController = null;
+  }
+  state.routeRequestId++;
 
   if (mapReady) {
     map.closePopup();
