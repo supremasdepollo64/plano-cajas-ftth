@@ -30,7 +30,7 @@
 .nearest-option{transition:border-color .15s,transform .15s,background .15s}
 .nearest-option.active{border-color:#25e0a1;background:#103548;transform:translateY(-1px)}
 .nearest-option.active .nearest-rank{background:#25e0a1;color:#06261d}
-.menu-toggle{position:fixed;z-index:4900;top:14px;left:14px;width:44px;height:44px;border:1px solid #31505e;border-radius:12px;background:#071b2af2;color:#fff;font-size:1.25rem;font-weight:900;box-shadow:0 8px 24px #00101855;cursor:pointer}
+.menu-toggle{position:fixed;z-index:4900;top:42px;left:14px;width:44px;height:44px;border:1px solid #31505e;border-radius:12px;background:#071b2af2;color:#fff;font-size:1.25rem;font-weight:900;box-shadow:0 8px 24px #00101855;cursor:pointer}
 .menu-shade{position:fixed;z-index:4890;inset:0;background:#00101870}
 .app-menu{position:fixed;z-index:4950;top:0;left:0;width:min(86vw,330px);height:100dvh;padding:18px;background:#071b2a;border-right:1px solid #31505e;box-shadow:18px 0 50px #00101880}
 .app-menu-header{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px;border-bottom:1px solid #1c3b4a}
@@ -51,7 +51,7 @@
 .modal-primary{width:100%;margin-top:6px;padding:11px;border:0;border-radius:10px;background:#25e0a1;color:#06261d;font-weight:900}.modal-primary:disabled{opacity:.45}
 .about-version{font-weight:800;color:#fff}.about-credit strong{color:#fff}
 .app-toast{position:fixed;z-index:5600;left:50%;bottom:22px;transform:translateX(-50%);max-width:min(90vw,460px);padding:12px 16px;border:1px solid #31505e;border-radius:12px;background:#071b2af5;color:#fff;box-shadow:0 12px 35px #0008;font-size:.84rem}
-@media(max-width:780px){.nearest-modal-card{width:100%;max-height:46vh;margin:0;border-radius:18px 18px 0 0!important}.menu-toggle{top:12px;left:12px}.leaflet-top.leaflet-left{top:54px}}
+@media(max-width:780px){.nearest-modal-card{width:100%;max-height:46vh;margin:0;border-radius:18px 18px 0 0!important}.menu-toggle{top:42px;left:12px}.leaflet-top.leaflet-left{top:96px}}
 
 .marker-pin.pon{background:#8f64ff;border-color:#d8ccff}
 .marker-pin.pon::after{border-top-color:#8f64ff}
@@ -73,3 +73,7 @@
 .startup-c-line{fill:none;stroke:#25e0a1;stroke-width:30;stroke-linecap:round;stroke-linejoin:round}
 .startup-c-dot{fill:#25e0a1}
 .startup-logo-wrap strong{font-size:1.35rem;letter-spacing:-.02em}
+
+/* CTO Finder 1.6 */
+.reset-action{background:#0a2635;border-color:#244858;color:#a9bdc5}
+.reset-action:active{transform:translateY(1px)}

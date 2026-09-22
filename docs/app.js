@@ -649,6 +649,47 @@ function applyBoxes(boxes, sourceName) {
   }
 }
 
+function resetLocationSearch() {
+  closeNearestModal();
+
+  locationInput.value = '';
+  nearestResult.textContent = '';
+  nearestOptions.innerHTML = '';
+  nearestModalStatus.textContent = 'Calculando distancias por calles…';
+
+  if (mapReady) {
+    map.closePopup();
+
+    if (state.routeLayer) {
+      map.removeLayer(state.routeLayer);
+      state.routeLayer = null;
+    }
+
+    if (state.targetMarker) {
+      map.removeLayer(state.targetMarker);
+      state.targetMarker = null;
+    }
+
+    if (state.selected && state.markers.has(state.selected)) {
+      const previous = state.boxes.find(item => item.id === state.selected);
+      if (previous) state.markers.get(state.selected).setIcon(markerIcon(previous));
+    }
+  }
+
+  state.selected = null;
+  state.customerLocation = null;
+  state.nearestItems = [];
+
+  if (mapReady && state.boxes.length) {
+    const validBoxes = state.boxes.filter(box => Number.isFinite(box.lat) && Number.isFinite(box.lng));
+    if (validBoxes.length) {
+      map.fitBounds(L.latLngBounds(validBoxes.map(box => [box.lat, box.lng])).pad(.08));
+    }
+  }
+
+  locationInput.focus();
+}
+
 function showToast(message) {
   if (!appToast) return;
   appToast.textContent = message;
@@ -772,6 +813,8 @@ locationInput.addEventListener('keydown', event => {
 
 document.querySelector('#nearestFromGps').addEventListener('click', () => requestGps(true));
 document.querySelector('#locate').addEventListener('click', () => requestGps(false));
+const resetSearch = document.querySelector('#resetSearch');
+resetSearch?.addEventListener('click', resetLocationSearch);
 
 document.querySelectorAll('[data-close-nearest]').forEach(el => {
   el.addEventListener('click', closeNearestModal);
