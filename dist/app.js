@@ -117,7 +117,7 @@ function markerIcon(box, selected = false) {
   if (!window.L) return null;
   return L.divIcon({
     className: 'marker-wrap',
-    html: `<span class="marker-pin ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}"></span>`,
+    html: `<span class="marker-pin ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}" style="--marker-color:${escapeText(box.color || inferOriginalColor(box.name, box.type))}"></span>`,
     iconSize: selected ? [35, 35] : [29, 29],
     iconAnchor: selected ? [11, 32] : [9, 27],
     popupAnchor: [4, -28]
@@ -172,7 +172,7 @@ function matchingBoxes() {
 function render() {
   const matches = matchingBoxes();
   list.innerHTML = matches.map(box => `
-    <li><button class="box-item ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''}" data-id="${box.id}">
+    <li><button class="box-item ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''}" data-id="${box.id}" style="--marker-color:${escapeText(box.color || inferOriginalColor(box.name, box.type))}">
       <span class="status" aria-hidden="true"></span>
       <span><strong>${escapeText(box.name)}</strong><small>${box.type === 'pon' ? 'PON principal · no utilizable para cliente' : (box.approx ? 'CTO · posición aproximada' : 'CTO · posición registrada')}</small></span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
@@ -196,7 +196,7 @@ function classifyNetworkPoint(name, explicitType = '') {
 
   if (/^(empalme|fusionar)\b/i.test(clean)) return 'infra';
   if (explicitType === 'cto' || explicitType === 'pon') return explicitType;
-  if (/\bcto\b|\bnap\b/i.test(clean)) return 'cto';
+  if (/\bcto\s*\d*\b|\bnap\s*\d*\b/i.test(clean)) return 'cto';
   if (/\bpon\b|\bprincipal\b/i.test(clean) || /\bpr$/i.test(clean)) return 'pon';
   return 'cto';
 }
@@ -205,7 +205,7 @@ function normalizeNetworkName(name, type) {
   let value = String(name || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim() || (type === 'pon' ? 'PON' : 'CTO');
 
   if (type === 'cto') {
-    value = value.replace(/\bnap\b/ig, 'CTO').replace(/\bcaja\b/ig, 'CTO').replace(/\bcto\b/ig, 'CTO').replace(/\bpon\b/ig, 'PON');
+    value = value.replace(/\bnap\s*(\d+)\b/ig, 'CTO $1').replace(/\bcto\s*(\d+)\b/ig, 'CTO $1').replace(/\bnap\b/ig, 'CTO').replace(/\bcaja\b/ig, 'CTO').replace(/\bcto\b/ig, 'CTO').replace(/\bpon\b/ig, 'PON');
     value = value.replace(/\bP\s*(\d+)\b/ig, 'PON $1');
   } else if (type === 'pon') {
     value = value.replace(/\bcaja\s+principal\b/ig, 'PON').replace(/\bprincipal\b/ig, 'PON').replace(/\bpon\b/ig, 'PON').replace(/\bpr\b/ig, 'PON');
@@ -232,6 +232,27 @@ function readExtendedType(placemark) {
   return node?.getElementsByTagNameNS('*', 'value')[0]?.textContent?.trim()?.toLowerCase() || '';
 }
 
+function inferOriginalColor(name, type) {
+  const value = String(name || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+  if (value.includes('srolt2')) return '#880E4F';
+  if (value.startsWith('rr4 ')) return '#558B2F';
+  if (/\bpon\s*5\b/.test(value)) return '#4E342E';
+  if (/\bpon\s*3\s+cto\s*5\b/.test(value)) return '#3949AB';
+  if (/\bpon\s*3\b/.test(value)) return '#673AB7';
+  if (/^pon\s*1$/.test(value) || /\bp1\b/.test(value)) return '#AFB42B';
+  if (/^pon\s*(4|6)$/.test(value) || value.includes('nap sr3f')) return '#E65100';
+
+  return '#0288D1';
+}
+
+function colorFromKmlPlacemark(placemark, name, type) {
+  const styleUrl = placemark.getElementsByTagNameNS('*', 'styleUrl')[0]?.textContent?.trim() || '';
+  const match = styleUrl.match(/-([0-9A-Fa-f]{6})(?:-|$)/);
+  if (match) return `#${match[1].toUpperCase()}`;
+  return inferOriginalColor(name, type);
+}
+
 function parseKml(text) {
   const xml = new DOMParser().parseFromString(text, 'application/xml');
   if (xml.querySelector('parsererror')) throw new Error('El archivo de ubicaciones no es válido.');
@@ -255,6 +276,7 @@ function parseKml(text) {
       description,
       type,
       usable: type === 'cto',
+      color: colorFromKmlPlacemark(placemark, originalName, type),
       lng: coordinates[0],
       lat: coordinates[1],
       approx: /aproximad/i.test(`${originalName} ${description}`)
@@ -613,6 +635,7 @@ function parseCsv(text) {
   const lngIndex = findHeader(['lng','lon','long','longitude','longitud','x']);
   const nameIndex = findHeader(['name','nombre','caja','cto','nap']);
   const descIndex = findHeader(['description','descripcion','grupo','zona','nota']);
+  const colorIndex = findHeader(['color','colour','hex']);
 
   if (latIndex < 0 || lngIndex < 0) {
     throw new Error('El CSV necesita columnas de latitud y longitud.');
@@ -635,6 +658,9 @@ function parseCsv(text) {
       description: description.trim(),
       type,
       usable: type === 'cto',
+      color: colorIndex >= 0 && /^#?[0-9a-f]{6}$/i.test(cells[colorIndex] || '')
+        ? `#${String(cells[colorIndex]).replace('#', '').toUpperCase()}`
+        : inferOriginalColor(originalName, type),
       lat,
       lng,
       approx: /aproximad/i.test(`${originalName} ${description}`)
@@ -652,6 +678,7 @@ function applyBoxes(boxes, sourceName) {
       description: box.description || '',
       type,
       usable: type === 'cto',
+      color: box.color || box.c || inferOriginalColor(box.name || box.n || '', type),
       lat: Number(box.lat),
       lng: Number(box.lng),
       approx: Boolean(box.approx || box.a)

@@ -1,4 +1,4 @@
-const CACHE = 'cto-finder-v9';
+const CACHE = 'cto-finder-v10';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'data/cajas.kml', 'data/network.js', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', event => {
