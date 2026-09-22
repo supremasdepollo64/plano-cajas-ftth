@@ -1,5 +1,5 @@
-const CACHE = 'cto-finder-v4';
-const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'data/cajas.kml', 'icon.svg', 'manifest.webmanifest'];
+const CACHE = 'cto-finder-v5';
+const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'data/cajas.kml', 'data/network.js', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
