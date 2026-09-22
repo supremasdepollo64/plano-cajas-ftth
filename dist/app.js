@@ -818,3 +818,15 @@ loadBoxes();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
+
+
+function hideStartupSplash() {
+  const splash = document.querySelector('#startupSplash');
+  if (!splash) return;
+  setTimeout(() => {
+    splash.classList.add('is-hiding');
+    setTimeout(() => splash.remove(), 320);
+  }, 1000);
+}
+
+hideStartupSplash();

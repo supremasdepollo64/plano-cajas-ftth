@@ -13,6 +13,30 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="startupSplash" class="startup-splash" aria-hidden="true">
+    <div class="startup-map-bg">
+      <svg viewBox="0 0 360 260" preserveAspectRatio="xMidYMid slice">
+        <path d="M-20 58 72 18 146 44 224 18 390 62"/>
+        <path d="M-35 158 50 124 127 150 206 113 286 143 395 108"/>
+        <path d="M46 -20 67 62 44 126 73 208 58 290"/>
+        <path d="M250 -20 225 67 248 126 223 206 252 290"/>
+      </svg>
+    </div>
+    <div class="startup-logo-wrap">
+      <svg class="startup-logo" viewBox="0 0 512 512" aria-hidden="true">
+        <path class="startup-road" d="M32 132 138 80 238 113 344 70 500 125"/>
+        <path class="startup-road" d="M8 356 118 300 223 334 334 280 510 331"/>
+        <path class="startup-road" d="M112 20 137 159 103 261 142 486"/>
+        <path class="startup-road" d="M391 0 360 168 397 260 357 512"/>
+        <path class="startup-c-line" d="M346 126 196 172 174 330 344 384"/>
+        <circle class="startup-c-dot" cx="346" cy="126" r="35"/>
+        <circle class="startup-c-dot" cx="196" cy="172" r="35"/>
+        <circle class="startup-c-dot" cx="174" cy="330" r="35"/>
+        <circle class="startup-c-dot" cx="344" cy="384" r="35"/>
+      </svg>
+      <strong>CTO Finder</strong>
+    </div>
+  </div>
   <button id="menuToggle" class="menu-toggle" type="button" aria-label="Abrir menú">☰</button>
   <div id="menuShade" class="menu-shade" hidden></div>
   <aside id="appMenu" class="app-menu" hidden aria-label="Menú principal">
@@ -30,15 +54,21 @@
       <span>Restaurar mapa original</span><small>Volver a las cajas incluidas</small>
     </button>
     <button class="app-menu-item" id="openAbout" type="button">
-      <span>Acerca de</span><small>Versión 1.4 · Sebastián Varnier</small>
+      <span>Acerca de</span><small>Versión 1.5</small>
     </button>
-    <p class="app-menu-credit">Versión 1.4<br><strong>Diseñada por Sebastián Varnier</strong></p>
     <input id="networkFileInput" type="file" accept=".kml,.csv,text/csv,application/vnd.google-earth.kml+xml" hidden>
   </aside>
   <main class="app-shell">
     <aside class="sidebar" aria-label="Panel de cajas">
       <header class="brand">
-        <div class="brand-mark" aria-hidden="true"><span></span><i></i></div>
+        <svg class="brand-logo-svg" viewBox="0 0 64 64" aria-hidden="true">
+  <path class="brand-map-line" d="M5 20 23 13 38 18 59 8M7 48 21 37 39 42 57 34"/>
+  <path class="brand-c-line" d="M46 14 24 21 20 42 46 50"/>
+  <circle class="brand-c-dot" cx="46" cy="14" r="5"/>
+  <circle class="brand-c-dot" cx="24" cy="21" r="5"/>
+  <circle class="brand-c-dot" cx="20" cy="42" r="5"/>
+  <circle class="brand-c-dot" cx="46" cy="50" r="5"/>
+</svg>
         <div><p>Red de fibra</p><h1>CTO Finder</h1></div>
       </header>
 
@@ -141,8 +171,8 @@
       <button class="simple-modal-close" data-close-simple type="button" aria-label="Cerrar">×</button>
       <p class="modal-kicker">Aplicación</p>
       <h2 id="aboutTitle">CTO Finder</h2>
-      <p class="about-version">Versión 1.4</p>
-      <p class="about-credit">Diseñada por <strong>Sebastián Varnier</strong></p>
+      <p class="about-version">Versión 1.5</p>
+      <p class="about-credit">Diseñada por <strong>Sebastián Barnier</strong></p>
     </section>
   </div>
 
