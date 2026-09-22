@@ -56,7 +56,7 @@ function markerIcon(box, selected = false) {
   if (!window.L) return null;
   return L.divIcon({
     className: 'marker-wrap',
-    html: `<span class="marker-pin ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}"></span>`,
+    html: `<span class="marker-pin ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}"></span>`,
     iconSize: selected ? [35, 35] : [29, 29],
     iconAnchor: selected ? [11, 32] : [9, 27],
     popupAnchor: [4, -28]
@@ -65,10 +65,14 @@ function markerIcon(box, selected = false) {
 
 function popupFor(box) {
   const node = popupTemplate.content.cloneNode(true);
-  node.querySelector('.popup-kicker').textContent = box.approx ? 'Ubicación aproximada' : 'Ubicación verificada';
+  node.querySelector('.popup-kicker').textContent = box.type === 'pon'
+    ? 'PON principal · No habilitada para alta'
+    : (box.approx ? 'CTO · Ubicación aproximada' : 'CTO · Ubicación verificada');
   node.querySelector('h2').textContent = box.name;
   const description = node.querySelector('.popup-description');
-  description.textContent = box.description || 'Caja de acceso de la red FTTH';
+  description.textContent = box.description || (box.type === 'pon'
+    ? 'Caja principal de distribución. No se ofrece como opción para conectar clientes.'
+    : 'CTO disponible como punto de acceso de la red FTTH.');
   description.hidden = !box.description;
   node.querySelector('.popup-coords').textContent = `${box.lat.toFixed(6)}, ${box.lng.toFixed(6)}`;
   node.querySelector('.directions').href = `https://www.google.com/maps/dir/?api=1&destination=${box.lat},${box.lng}`;
@@ -107,9 +111,9 @@ function matchingBoxes() {
 function render() {
   const matches = matchingBoxes();
   list.innerHTML = matches.map(box => `
-    <li><button class="box-item ${box.approx ? 'approx' : ''}" data-id="${box.id}">
+    <li><button class="box-item ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''}" data-id="${box.id}">
       <span class="status" aria-hidden="true"></span>
-      <span><strong>${escapeText(box.name)}</strong><small>${box.approx ? 'Posición aproximada' : 'Posición registrada'}</small></span>
+      <span><strong>${escapeText(box.name)}</strong><small>${box.type === 'pon' ? 'PON principal · no utilizable para cliente' : (box.approx ? 'CTO · posición aproximada' : 'CTO · posición registrada')}</small></span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
     </button></li>`).join('');
 
@@ -125,27 +129,77 @@ function render() {
   }
 }
 
+function classifyNetworkPoint(name, explicitType = '') {
+  const clean = String(name || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+  const lower = clean.toLocaleLowerCase('es');
+
+  if (/^(empalme|fusionar)\b/i.test(clean)) return 'infra';
+  if (explicitType === 'cto' || explicitType === 'pon') return explicitType;
+  if (/\bcto\b|\bnap\b/i.test(clean)) return 'cto';
+  if (/\bpon\b|\bprincipal\b/i.test(clean) || /\bpr$/i.test(clean)) return 'pon';
+  return 'cto';
+}
+
+function normalizeNetworkName(name, type) {
+  let value = String(name || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim() || (type === 'pon' ? 'PON' : 'CTO');
+
+  if (type === 'cto') {
+    value = value.replace(/\bnap\b/ig, 'CTO').replace(/\bcaja\b/ig, 'CTO').replace(/\bcto\b/ig, 'CTO').replace(/\bpon\b/ig, 'PON');
+    value = value.replace(/\bP\s*(\d+)\b/ig, 'PON $1');
+  } else if (type === 'pon') {
+    value = value.replace(/\bcaja\s+principal\b/ig, 'PON').replace(/\bprincipal\b/ig, 'PON').replace(/\bpon\b/ig, 'PON').replace(/\bpr\b/ig, 'PON');
+  }
+
+  return value.replace(/\s+/g, ' ').trim();
+}
+
+function placemarkFolderName(placemark) {
+  let node = placemark.parentElement;
+  while (node) {
+    if (node.localName === 'Folder') {
+      const directName = [...node.children].find(child => child.localName === 'name');
+      if (directName) return directName.textContent?.trim() || '';
+    }
+    node = node.parentElement;
+  }
+  return '';
+}
+
+function readExtendedType(placemark) {
+  const dataNodes = [...placemark.getElementsByTagNameNS('*', 'Data')];
+  const node = dataNodes.find(item => (item.getAttribute('name') || '').toLowerCase() === 'type');
+  return node?.getElementsByTagNameNS('*', 'value')[0]?.textContent?.trim()?.toLowerCase() || '';
+}
+
 function parseKml(text) {
   const xml = new DOMParser().parseFromString(text, 'application/xml');
   if (xml.querySelector('parsererror')) throw new Error('El archivo de ubicaciones no es válido.');
 
   return [...xml.getElementsByTagNameNS('*', 'Placemark')].map((placemark, index) => {
-    const name = placemark.getElementsByTagNameNS('*', 'name')[0]?.textContent?.trim() || `Caja ${index + 1}`;
-    const description = placemark.getElementsByTagNameNS('*', 'description')[0]?.textContent?.trim() || '';
+    const folderName = placemarkFolderName(placemark);
+    if (/cliente/i.test(folderName)) return null;
+
+    const originalName = placemark.getElementsByTagNameNS('*', 'name')[0]?.textContent?.trim() || `CTO ${index + 1}`;
+    const description = placemark.getElementsByTagNameNS('*', 'description')[0]?.textContent?.replace(/<[^>]+>/g, ' ')?.replace(/\s+/g, ' ')?.trim() || '';
     const raw = placemark.getElementsByTagNameNS('*', 'coordinates')[0]?.textContent?.trim();
     const coordinates = raw?.split(',').map(Number);
     if (!coordinates || coordinates.length < 2 || coordinates.some(Number.isNaN)) return null;
+
+    const type = classifyNetworkPoint(originalName, readExtendedType(placemark));
+    if (type === 'infra') return null;
+
     return {
       id: `box-${index + 1}`,
-      name,
+      name: normalizeNetworkName(originalName, type),
       description,
+      type,
+      usable: type === 'cto',
       lng: coordinates[0],
       lat: coordinates[1],
-      approx: /aproximad/i.test(`${name} ${description}`)
+      approx: /aproximad/i.test(`${originalName} ${description}`)
     };
   }).filter(Boolean);
 }
-
 function buildMarkers() {
   if (!mapReady) return;
 
@@ -173,6 +227,7 @@ function distanceMeters(lat1, lng1, lat2, lng2) {
 
 function nearestCandidates(lat, lng, limit = 12) {
   return state.boxes
+    .filter(box => box.type !== 'pon' && box.usable !== false)
     .map(box => ({ box, directDistance: distanceMeters(lat, lng, box.lat, box.lng) }))
     .sort((a, b) => a.directDistance - b.directDistance)
     .slice(0, limit);
@@ -483,21 +538,39 @@ function parseCsv(text) {
     const lng = Number(String(cells[lngIndex] || '').replace(',', '.'));
     if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
 
-    const name = (nameIndex >= 0 ? cells[nameIndex] : '') || `CTO ${index + 1}`;
+    const originalName = (nameIndex >= 0 ? cells[nameIndex] : '') || `CTO ${index + 1}`;
     const description = descIndex >= 0 ? (cells[descIndex] || '') : '';
+    const type = classifyNetworkPoint(originalName);
+    if (type === 'infra') return null;
+
     return {
       id: `csv-${index + 1}`,
-      name: name.trim(),
+      name: normalizeNetworkName(originalName, type),
       description: description.trim(),
+      type,
+      usable: type === 'cto',
       lat,
       lng,
-      approx: /aproximad/i.test(`${name} ${description}`)
+      approx: /aproximad/i.test(`${originalName} ${description}`)
     };
   }).filter(Boolean);
 }
 
 function applyBoxes(boxes, sourceName) {
-  state.boxes = boxes.map((box, index) => ({ ...box, id: `import-${index + 1}` }));
+  state.boxes = boxes.map((box, index) => {
+    const type = box.type || classifyNetworkPoint(box.name || box.n || '', box.t || '');
+    return {
+      ...box,
+      id: `import-${index + 1}`,
+      name: normalizeNetworkName(box.name || box.n || '', type),
+      description: box.description || '',
+      type,
+      usable: type === 'cto',
+      lat: Number(box.lat),
+      lng: Number(box.lng),
+      approx: Boolean(box.approx || box.a)
+    };
+  }).filter(box => Number.isFinite(box.lat) && Number.isFinite(box.lng) && box.type !== 'infra');
   state.selected = null;
   state.sourceName = sourceName || 'Archivo importado';
 
@@ -572,6 +645,10 @@ async function loadBoxes() {
       if (Array.isArray(saved.boxes) && saved.boxes.length) {
         applyBoxes(saved.boxes, saved.name || 'Archivo importado');
       }
+    }
+
+    if (!state.boxes.length && Array.isArray(window.DEFAULT_NETWORK) && window.DEFAULT_NETWORK.length) {
+      applyBoxes(window.DEFAULT_NETWORK, 'Cajas Hudson');
     }
 
     if (!state.boxes.length) {
