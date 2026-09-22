@@ -52,6 +52,7 @@ jobs:
           cp docs/app.js android/app/src/main/assets/app.js
           cp docs/styles.css android/app/src/main/assets/styles.css
           cp docs/data/cajas.kml android/app/src/main/assets/data/cajas.kml
+          cp docs/data/network.js android/app/src/main/assets/data/network.js
           python3 - <<'PY'
           from pathlib import Path
           import json
