@@ -52,9 +52,23 @@
         </button>
       </div>
       <div class="legend" aria-label="Referencias"><span><i class="dot exact"></i>Verificada</span><span><i class="dot approx"></i>Aproximada</span></div>
-      <div id="loading" class="loading"><span></span>Cargando cajas…</div>
+      <div id="loading" class="loading" hidden><span></span>Cargando cajas…</div>
     </section>
   </main>
+  <div id="nearestModal" class="nearest-modal" hidden>
+    <div class="nearest-modal-backdrop" data-close-nearest></div>
+    <section class="nearest-modal-card" role="dialog" aria-modal="true" aria-labelledby="nearestModalTitle">
+      <header class="nearest-modal-header">
+        <div>
+          <p>CTO Finder</p>
+          <h2 id="nearestModalTitle">CTO más cercanas</h2>
+        </div>
+        <button type="button" class="nearest-modal-close" data-close-nearest aria-label="Cerrar">×</button>
+      </header>
+      <p id="nearestModalStatus" class="nearest-modal-status">Calculando distancias por calles…</p>
+      <div id="nearestOptions" class="nearest-options"></div>
+    </section>
+  </div>
   <template id="popupTemplate">
     <article class="popup-card">
       <p class="popup-kicker"></p>
