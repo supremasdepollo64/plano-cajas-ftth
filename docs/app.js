@@ -860,8 +860,8 @@ nearestOptions?.addEventListener('click', event => {
 menuToggle?.addEventListener('click', openMenu);
 menuClose?.addEventListener('click', closeMenu);
 menuShade?.addEventListener('click', closeMenu);
-openAccess?.addEventListener('click', () => openSimpleModal(accessModal));
-openAbout?.addEventListener('click', () => openSimpleModal(aboutModal));
+openAccess?.addEventListener('click', () => openSimpleModal(document.querySelector('#accessModal')));
+openAbout?.addEventListener('click', () => openSimpleModal(document.querySelector('#aboutModal')));
 document.querySelectorAll('[data-close-simple]').forEach(el => el.addEventListener('click', closeSimpleModals));
 document.querySelectorAll('[data-role-choice]').forEach(button => button.addEventListener('click', () => {
   document.querySelectorAll('[data-role-choice]').forEach(item => item.classList.remove('active'));
