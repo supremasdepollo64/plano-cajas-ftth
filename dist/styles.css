@@ -83,3 +83,28 @@
 
 /* CTO Finder 1.9 */
 .marker-pin{transition:width .15s,height .15s,box-shadow .15s}
+
+/* CTO Finder 1.10 */
+.marker-star{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  color:var(--marker-color,#8f64ff);
+  font-size:30px;
+  line-height:1;
+  text-shadow:
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff,
+    0 5px 12px #00111b66;
+  filter:drop-shadow(0 3px 5px #00111b44);
+  transform-origin:center;
+}
+.marker-star.selected{
+  width:40px;
+  height:40px;
+  font-size:36px;
+  filter:drop-shadow(0 0 5px #ff6b45) drop-shadow(0 5px 8px #00111b55);
+}

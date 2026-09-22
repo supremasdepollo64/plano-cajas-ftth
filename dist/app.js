@@ -115,15 +115,27 @@ function enableMapLongPress() {
 
 function markerIcon(box, selected = false) {
   if (!window.L) return null;
+
+  const color = escapeText(box.color || inferOriginalColor(box.name, box.type));
+
+  if (box.type === 'pon') {
+    return L.divIcon({
+      className: 'marker-wrap',
+      html: `<span class="marker-star ${selected ? 'selected' : ''}" style="--marker-color:${color}">★</span>`,
+      iconSize: selected ? [40, 40] : [34, 34],
+      iconAnchor: selected ? [20, 20] : [17, 17],
+      popupAnchor: [0, -19]
+    });
+  }
+
   return L.divIcon({
     className: 'marker-wrap',
-    html: `<span class="marker-pin ${box.type === 'pon' ? 'pon' : ''} ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}" style="--marker-color:${escapeText(box.color || inferOriginalColor(box.name, box.type))}"></span>`,
+    html: `<span class="marker-pin ${box.approx ? 'approx' : ''} ${selected ? 'selected' : ''}" style="--marker-color:${color}"></span>`,
     iconSize: selected ? [35, 35] : [29, 29],
     iconAnchor: selected ? [11, 32] : [9, 27],
     popupAnchor: [4, -28]
   });
 }
-
 function popupFor(box) {
   const node = popupTemplate.content.cloneNode(true);
   node.querySelector('.popup-kicker').textContent = box.type === 'pon'
@@ -140,7 +152,7 @@ function popupFor(box) {
   return node;
 }
 
-function selectBox(id, move = true) {
+function selectBox(id, move = true, openPopup = true) {
   const box = state.boxes.find(item => item.id === id);
   if (!box) return;
 
@@ -156,7 +168,13 @@ function selectBox(id, move = true) {
   if (!marker) return;
 
   marker.setIcon(markerIcon(box, true));
-  marker.bindPopup(popupFor(box), { maxWidth: 210, minWidth: 145, autoPanPadding: [18, 18] }).openPopup();
+
+  if (openPopup) {
+    marker.bindPopup(popupFor(box), { maxWidth: 210, minWidth: 145, autoPanPadding: [18, 18] }).openPopup();
+  } else {
+    map.closePopup();
+  }
+
   if (move) map.flyTo([box.lat, box.lng], Math.max(map.getZoom(), 17), { duration: .6 });
 }
 
@@ -450,7 +468,7 @@ async function selectNearestCandidate(id) {
     card.classList.toggle('active', card.dataset.nearestCard === id);
   });
 
-  selectBox(id, false);
+  selectBox(id, false, false);
 
   const meters = Number.isFinite(item.roadDistance) ? item.roadDistance : item.directDistance;
   const suffix = Number.isFinite(item.roadDistance) ? 'por calles' : 'aprox.';
@@ -890,6 +908,11 @@ menuShade?.addEventListener('click', closeMenu);
 openAccess?.addEventListener('click', () => openSimpleModal(document.querySelector('#accessModal')));
 openAbout?.addEventListener('click', () => openSimpleModal(document.querySelector('#aboutModal')));
 document.querySelectorAll('[data-close-simple]').forEach(el => el.addEventListener('click', closeSimpleModals));
+document.addEventListener('click', event => {
+  if (event.target.closest('[data-close-simple]')) {
+    closeSimpleModals();
+  }
+});
 document.querySelectorAll('[data-role-choice]').forEach(button => button.addEventListener('click', () => {
   document.querySelectorAll('[data-role-choice]').forEach(item => item.classList.remove('active'));
   button.classList.add('active');
