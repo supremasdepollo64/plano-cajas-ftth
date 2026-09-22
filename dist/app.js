@@ -11,6 +11,9 @@ const visibleCount = document.querySelector('#visibleCount');
 const popupTemplate = document.querySelector('#popupTemplate');
 const locationInput = document.querySelector('#locationInput');
 const nearestResult = document.querySelector('#nearestResult');
+const nearestModal = document.querySelector('#nearestModal');
+const nearestModalStatus = document.querySelector('#nearestModalStatus');
+const nearestOptions = document.querySelector('#nearestOptions');
 const mapStage = document.querySelector('.map-stage');
 const mapToolbar = document.querySelector('.map-toolbar');
 const legend = document.querySelector('.legend');
@@ -153,13 +156,35 @@ function distanceMeters(lat1, lng1, lat2, lng2) {
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function nearestBox(lat, lng) {
-  let best = null;
-  for (const box of state.boxes) {
-    const distance = distanceMeters(lat, lng, box.lat, box.lng);
-    if (!best || distance < best.distance) best = { box, distance };
+function nearestCandidates(lat, lng, limit = 12) {
+  return state.boxes
+    .map(box => ({ box, directDistance: distanceMeters(lat, lng, box.lat, box.lng) }))
+    .sort((a, b) => a.directDistance - b.directDistance)
+    .slice(0, limit);
+}
+
+async function roadDistances(lat, lng, candidates) {
+  const points = [[lng, lat], ...candidates.map(item => [item.box.lng, item.box.lat])];
+  const coords = points.map(point => point.join(',')).join(';');
+  const destinations = candidates.map((_, index) => index + 1).join(';');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 9000);
+
+  try {
+    const url = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=0&destinations=${destinations}&annotations=distance`;
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error('No se pudo calcular la distancia por calles.');
+    const data = await response.json();
+    const distances = data?.distances?.[0];
+    if (!Array.isArray(distances)) throw new Error('Respuesta de rutas inválida.');
+
+    return candidates.map((item, index) => ({
+      ...item,
+      roadDistance: Number.isFinite(distances[index]) ? distances[index] : null
+    }));
+  } finally {
+    clearTimeout(timer);
   }
-  return best;
 }
 
 function formatDistance(meters) {
@@ -174,23 +199,87 @@ function showTarget(lat, lng, label) {
   }).addTo(map).bindPopup(label || 'Ubicación del cliente');
 }
 
-function locateNearest(lat, lng, label = 'Ubicación del cliente') {
-  if (!state.boxes.length) {
-    nearestResult.textContent = 'Todavía se están cargando las cajas.';
+function openNearestModal() {
+  if (!nearestModal) return;
+  nearestModal.hidden = false;
+  nearestModal.style.display = 'grid';
+}
+
+function closeNearestModal() {
+  if (!nearestModal) return;
+  nearestModal.hidden = true;
+  nearestModal.style.display = 'none';
+}
+
+function renderNearestOptions(lat, lng, items, usingRoadDistance) {
+  const top = items.slice(0, 3);
+  if (!top.length) {
+    nearestModalStatus.textContent = 'No encontré CTO cercanas.';
+    nearestOptions.innerHTML = '';
     return;
   }
 
-  const result = nearestBox(lat, lng);
-  if (!result) return;
+  nearestModalStatus.textContent = usingRoadDistance
+    ? 'Distancia estimada por calles'
+    : 'No pude consultar rutas. Muestro distancia aproximada en línea recta.';
 
-  showTarget(lat, lng, label);
-  selectBox(result.box.id, false);
+  nearestOptions.innerHTML = top.map((item, index) => {
+    const meters = usingRoadDistance ? item.roadDistance : item.directDistance;
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${item.box.lat},${item.box.lng}&travelmode=driving`;
+    return `
+      <article class="nearest-option">
+        <div class="nearest-rank">${index + 1}</div>
+        <button class="nearest-select" type="button" data-nearest-id="${item.box.id}">
+          <strong>${escapeText(item.box.name)}</strong>
+          <span>${formatDistance(meters)} ${usingRoadDistance ? 'por calles' : 'aprox.'}</span>
+        </button>
+        <a class="nearest-route" href="${mapsUrl}" target="_blank" rel="noreferrer">Ir</a>
+      </article>`;
+  }).join('');
 
-  if (mapReady) {
-    map.fitBounds(L.latLngBounds([[lat, lng], [result.box.lat, result.box.lng]]).pad(.35), { maxZoom: 17 });
+  const first = top[0];
+  nearestResult.innerHTML = `Más cercana: <strong>${escapeText(first.box.name)}</strong> · ${formatDistance(usingRoadDistance ? first.roadDistance : first.directDistance)}`;
+}
+
+async function locateNearest(lat, lng, label = 'Ubicación del cliente') {
+  if (!state.boxes.length) {
+    nearestResult.textContent = 'Las cajas todavía no están disponibles.';
+    return;
   }
 
-  nearestResult.innerHTML = `Más cercana: <strong>${escapeText(result.box.name)}</strong> · ${formatDistance(result.distance)}`;
+  showTarget(lat, lng, label);
+  openNearestModal();
+  nearestModalStatus.textContent = 'Calculando distancias por calles…';
+  nearestOptions.innerHTML = '';
+
+  const candidates = nearestCandidates(lat, lng, 12);
+
+  try {
+    const routed = await roadDistances(lat, lng, candidates);
+    const valid = routed
+      .filter(item => Number.isFinite(item.roadDistance))
+      .sort((a, b) => a.roadDistance - b.roadDistance);
+
+    if (!valid.length) throw new Error('Sin rutas');
+
+    renderNearestOptions(lat, lng, valid, true);
+
+    const first = valid[0];
+    selectBox(first.box.id, false);
+    if (mapReady) {
+      map.fitBounds(L.latLngBounds([[lat, lng], [first.box.lat, first.box.lng]]).pad(.35), { maxZoom: 17 });
+    }
+  } catch (_) {
+    renderNearestOptions(lat, lng, candidates, false);
+
+    const first = candidates[0];
+    if (first) {
+      selectBox(first.box.id, false);
+      if (mapReady) {
+        map.fitBounds(L.latLngBounds([[lat, lng], [first.box.lat, first.box.lng]]).pad(.35), { maxZoom: 17 });
+      }
+    }
+  }
 }
 
 function parseCoordinates(value) {
@@ -316,7 +405,10 @@ async function loadBoxes() {
     empty.textContent = error.message || 'No se pudieron cargar las cajas.';
     nearestResult.textContent = 'Error cargando las cajas. Cerrá y volvé a abrir la app.';
   } finally {
-    loading.hidden = true;
+    if (loading) {
+      loading.hidden = true;
+      loading.style.display = 'none';
+    }
   }
 }
 
@@ -350,6 +442,16 @@ locationInput.addEventListener('keydown', event => {
 
 document.querySelector('#nearestFromGps').addEventListener('click', () => requestGps(true));
 document.querySelector('#locate').addEventListener('click', () => requestGps(false));
+
+document.querySelectorAll('[data-close-nearest]').forEach(el => {
+  el.addEventListener('click', closeNearestModal);
+});
+
+nearestOptions?.addEventListener('click', event => {
+  const button = event.target.closest('[data-nearest-id]');
+  if (!button) return;
+  selectBox(button.dataset.nearestId);
+});
 
 initMap();
 loadBoxes();
