@@ -50,6 +50,67 @@ function initMap() {
   }).addTo(map);
   layer = L.featureGroup().addTo(map);
   mapReady = true;
+  enableMapLongPress();
+}
+
+function enableMapLongPress() {
+  if (!mapReady || !map) return;
+
+  const container = map.getContainer();
+  let timer = null;
+  let start = null;
+  let activePointerId = null;
+
+  const cancel = () => {
+    if (timer) clearTimeout(timer);
+    timer = null;
+    start = null;
+    activePointerId = null;
+  };
+
+  container.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.target.closest('.leaflet-marker-icon, .leaflet-control, .leaflet-popup, .nearest-modal-card')) return;
+
+    activePointerId = event.pointerId;
+    start = { x: event.clientX, y: event.clientY };
+
+    timer = setTimeout(() => {
+      if (!start) return;
+
+      const rect = container.getBoundingClientRect();
+      const point = L.point(start.x - rect.left, start.y - rect.top);
+      const latlng = map.containerPointToLatLng(point);
+
+      locateNearest(latlng.lat, latlng.lng, 'Punto seleccionado en el mapa');
+
+      if (navigator.vibrate) navigator.vibrate(35);
+
+      timer = null;
+      start = null;
+      activePointerId = null;
+    }, 700);
+  }, { passive: true });
+
+  container.addEventListener('pointermove', event => {
+    if (!timer || event.pointerId !== activePointerId || !start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.hypot(dx, dy) > 14) cancel();
+  }, { passive: true });
+
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+    container.addEventListener(type, cancel, { passive: true });
+  });
+
+  container.addEventListener('contextmenu', event => {
+    if (event.target.closest('.leaflet-marker-icon, .leaflet-control, .leaflet-popup')) return;
+    event.preventDefault();
+    const rect = container.getBoundingClientRect();
+    const point = L.point(event.clientX - rect.left, event.clientY - rect.top);
+    const latlng = map.containerPointToLatLng(point);
+    locateNearest(latlng.lat, latlng.lng, 'Punto seleccionado en el mapa');
+  });
 }
 
 function markerIcon(box, selected = false) {
@@ -95,7 +156,7 @@ function selectBox(id, move = true) {
   if (!marker) return;
 
   marker.setIcon(markerIcon(box, true));
-  marker.bindPopup(popupFor(box), { maxWidth: 280 }).openPopup();
+  marker.bindPopup(popupFor(box), { maxWidth: 210, minWidth: 145, autoPanPadding: [18, 18] }).openPopup();
   if (move) map.flyTo([box.lat, box.lng], Math.max(map.getZoom(), 17), { duration: .6 });
 }
 
